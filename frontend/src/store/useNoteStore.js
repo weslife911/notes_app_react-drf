@@ -49,6 +49,10 @@ export const useNoteStore = create((set, get) => ({
         }
     },
 
+    editNote: async(id) => {
+        
+    },
+
     addCategory: async (category) => {
         try {
             const response = await axios.post("http://localhost:8000/api/v1/category/", { category });
