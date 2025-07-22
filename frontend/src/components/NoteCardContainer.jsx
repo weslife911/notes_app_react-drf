@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { useNoteStore } from "../store/useNoteStore";
 import NoteCard from "./NoteCard";
+import Loader from "../components/Loader"
 
 function NoteCardContainer() {
   const { getNotes, notes } = useNoteStore();
@@ -21,6 +22,7 @@ function NoteCardContainer() {
 
     return () => clearInterval(intervalId);
   }, []);
+
 
   return (
     <div className="container">

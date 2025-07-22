@@ -3,20 +3,30 @@ import { useNoteStore } from "../store/useNoteStore";
 import { useEffect } from "react";
 import { useFormik } from "formik";
 import * as Yup from "yup";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 
-function AddNotes() {
-  const { getCategories, categories, addNote } = useNoteStore();
+function EditPage() {
+  const { note, editNote, getNote, getCategories, categories } = useNoteStore();
+  const { id } = useParams();
   const navigate = useNavigate();
+
+  useEffect(() => {
+    const fetchNote = async () => {
+      await getNote(id);
+    };
+    fetchNote();
+  }, [id, getNote]);
 
   useEffect(() => {
     getCategories();
   }, []);
 
+  console.log(note)
+
   const formik = useFormik({
     initialValues: {
-      title: "",
-      content: "",
+      title: note?.title || "",
+      content: note?.content || "",
       category: "",
     },
     validationSchema: Yup.object({
@@ -26,17 +36,22 @@ function AddNotes() {
     }),
     onSubmit: async (values) => {
       try {
-        await addNote(values);
-        navigate("/");
+        editNote(id, {
+          title: values.title,
+          content: values.category,
+          category: values.category,
+          category_id: note?.category
+        });
+        navigate(`/note/${id}`);
       } catch (error) {
-        console.error("Failed to add note:", error);
+        console.error("Failed to edit note:", error);
       }
     },
   });
 
   return (
     <form onSubmit={formik.handleSubmit}>
-      <h5>Add New Note</h5>
+      <h5>Edit Note</h5>
 
       <div className="mb-3">
         <label htmlFor="title" className="form-label">
@@ -101,10 +116,10 @@ function AddNotes() {
         type="submit"
         className="btn btn-primary d-flex justify-content-center"
         style={{ width: "100%" }}
-        value="Add Note"
+        value="Edit Note"
       />
     </form>
   );
 }
 
-export default AddNotes;
+export default EditPage;

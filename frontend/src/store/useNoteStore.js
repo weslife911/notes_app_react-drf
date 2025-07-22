@@ -4,6 +4,7 @@ import { toast } from "react-hot-toast";
 
 export const useNoteStore = create((set, get) => ({
     noteAdded: false,
+    noteDeleted: false,
     notes: [],
     note: {},
     categories: [],
@@ -49,8 +50,37 @@ export const useNoteStore = create((set, get) => ({
         }
     },
 
-    editNote: async(id) => {
+    editNote: async (id, data) => {
+    const { editCategory } = get();
+    try {
+        if (data.category_id) {
+            await editCategory(data.category_id, data.category);
+        }
         
+        const response = await axios.put(`http://localhost:8000/api/v1/notes/${id}/`, {
+            title: data.title,
+            content: data.content,
+            category: data.category
+        });
+        
+        if (response.status === 200) {
+            toast.success("Note edited successfully");
+        }
+    } catch (error) {
+        console.error("Error editing note:", error);
+        toast.error("Failed to edit note. Please try again.");
+    }
+},
+
+    deleteNote: async(id) => {
+        return await axios.delete(`http://localhost:8000/api/v1/notes/${id}/`)
+        .then(() => {
+            toast.success("Note deleted successfully");
+            set({noteDeleted: true});
+        })
+        .catch((e) => {
+            toast.error("Error while deleting notes");
+        });
     },
 
     addCategory: async (category) => {
@@ -73,4 +103,21 @@ export const useNoteStore = create((set, get) => ({
             toast.error("Failed to fetch categories. Please try again.");
         }
     },
+
+    editCategory: async (id, category) => {
+        try {
+            await axios.put(`http://localhost:8000/api/v1/category/${id}/`, { category });
+        } catch (error) {
+            console.error("Error editing category:", error);
+            toast.error("Failed to edit category. Please try again.");
+        }
+    },
+
+    deleteCategory: async(id) => {
+        return await axios.delete(`http://localhost:8000/api/v1/category/${id}/`)
+        .catch((e) => {
+            console.log("Error in deleting category", e);
+        });
+    },
+
 }));
