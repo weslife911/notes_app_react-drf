@@ -1,22 +1,27 @@
 import { FaNoteSticky } from "react-icons/fa6";
 import { FaBookOpenReader } from "react-icons/fa6";
+import { format, parseISO } from 'date-fns';
 
 import { MdMarkunread } from "react-icons/md";
 import { Link } from "react-router-dom";
 
-function NoteCard({ color }) {
+function NoteCard({ color, note }) {
+
+    const dateStr = note.created;
+    const formattedDate = format(parseISO(dateStr), 'dd MMMM yyyy');
+
   return (
     <div className="col-md-4 single-note-item all-category">
         <div className="card card-body">
             <span className="side-stick" style={{backgroundColor: color}}></span>
             <FaNoteSticky style={{marginLeft: "auto", color: color}}/>
-            <h5 className="note-title text-truncate w-75 mb-0" data-noteheading="Book a Ticket for Movie">Book a Ticket for Movie </h5>
-            <p className="note-date font-12 text-muted">11 March 2009</p>
+            <h5 className="note-title text-truncate w-75 mb-0" data-noteheading="Book a Ticket for Movie">{note.title} </h5>
+            <p className="note-date font-12 text-muted">{formattedDate}</p>
             <div className="note-content">
-                <p className="note-inner-content text-muted" data-notecontent="Blandit tempus porttitor aasfs. Integer posuere erat a ante venenatis.">Blandit tempus porttitor aasfs. Integer posuere erat a ante venenatis.</p>
+                <p className="note-inner-content text-muted">{note.content}</p>
             </div>
             <div className="d-flex align-items-center">
-                <Link to="/notes-detail">
+                <Link to={`/note/${note.id}`}>
                 <span className="mr-1"><MdMarkunread style={{fontSize: "25px", cursor:"pointer", color: color}}/></span>
                 </Link>
                 

@@ -4,7 +4,7 @@ This is a notes app with a Django backend (using Django REST Framework) and a Re
 
 ## Backend Setup
 
-1. Change directory to the backend folder:
+1.Change directory to the backend folder:
 
     cd notepad
 
@@ -15,11 +15,11 @@ This is a notes app with a Django backend (using Django REST Framework) and a Re
     python manage.py runserver
 
 ## Frontend Setup
-1. Change directory to the frontend folder
+1.Change directory to the frontend folder
 
     cd frontend
 
-2. Install dependencies and start the development server
+2.Install dependencies and start the development server
 
     npm install
     npm run dev
