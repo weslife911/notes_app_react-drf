@@ -12,7 +12,7 @@ function EditPage() {
 
   useEffect(() => {
     const fetchNote = async () => {
-      await getNote(id);
+      return await getNote(id);
     };
     fetchNote();
   }, [id, getNote]);
