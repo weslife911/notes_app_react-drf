@@ -13,7 +13,7 @@ export const useNoteStore = create((set, get) => ({
         const { addCategory } = get();
         try {
             const category = await addCategory(note.category);
-            await axios.post("http://localhost:8000/api/v1/notes/", {
+            await axios.post("https://notes-app-react-drf-som3.onrender.com/api/v1/notes/", {
                 title: note.title,
                 content: note.content,
                 category: category.id,
@@ -32,7 +32,7 @@ export const useNoteStore = create((set, get) => ({
 
     getNotes: async () => {
         try {
-            const response = await axios.get("http://localhost:8000/api/v1/notes/?format=json");
+            const response = await axios.get("https://notes-app-react-drf-som3.onrender.com/api/v1/notes/?format=json");
             set({ notes: response.data });
         } catch (error) {
             console.error("Error fetching notes:", error);
@@ -42,7 +42,7 @@ export const useNoteStore = create((set, get) => ({
 
     getNote: async (id) => {
         try {
-            const response = await axios.get(`http://localhost:8000/api/v1/notes/${id}/?format=json`);
+            const response = await axios.get(`https://notes-app-react-drf-som3.onrender.com/api/v1/notes/${id}/?format=json`);
             set({ note: response.data });
         } catch (error) {
             console.error("Error fetching note:", error);
@@ -57,7 +57,7 @@ export const useNoteStore = create((set, get) => ({
             await editCategory(data.category_id, data.category);
         }
         
-        const response = await axios.put(`http://localhost:8000/api/v1/notes/${id}/`, {
+        const response = await axios.put(`https://notes-app-react-drf-som3.onrender.com/api/v1/notes/${id}`, {
             title: data.title,
             content: data.content,
             category: data.category
@@ -73,7 +73,7 @@ export const useNoteStore = create((set, get) => ({
 },
 
     deleteNote: async(id) => {
-        return await axios.delete(`http://localhost:8000/api/v1/notes/${id}/`)
+        return await axios.delete(`https://notes-app-react-drf-som3.onrender.com/api/v1/notes/${id}`)
         .then(() => {
             toast.success("Note deleted successfully");
             set({noteDeleted: true});
@@ -85,7 +85,7 @@ export const useNoteStore = create((set, get) => ({
 
     addCategory: async (category) => {
         try {
-            const response = await axios.post("http://localhost:8000/api/v1/category/", { category });
+            const response = await axios.post("https://notes-app-react-drf-som3.onrender.com/api/v1/category/", { category });
             return response.data;
         } catch (error) {
             console.error("Error adding category:", error);
@@ -96,7 +96,7 @@ export const useNoteStore = create((set, get) => ({
 
     getCategories: async () => {
         try {
-            const response = await axios.get("http://localhost:8000/api/v1/category/?format=json");
+            const response = await axios.get("https://notes-app-react-drf-som3.onrender.com/api/v1/category/?format=json");
             set({ categories: response.data });
         } catch (error) {
             console.error("Error fetching categories:", error);
@@ -106,7 +106,7 @@ export const useNoteStore = create((set, get) => ({
 
     editCategory: async (id, category) => {
         try {
-            await axios.put(`http://localhost:8000/api/v1/category/${id}/`, { category });
+            await axios.put(`https://notes-app-react-drf-som3.onrender.com/api/v1/category/${id}/`, { category });
         } catch (error) {
             console.error("Error editing category:", error);
             toast.error("Failed to edit category. Please try again.");
@@ -114,7 +114,7 @@ export const useNoteStore = create((set, get) => ({
     },
 
     deleteCategory: async(id) => {
-        return await axios.delete(`http://localhost:8000/api/v1/category/${id}/`)
+        return await axios.delete(`https://notes-app-react-drf-som3.onrender.com/api/v1/category/${id}/`)
         .catch((e) => {
             console.log("Error in deleting category", e);
         });
