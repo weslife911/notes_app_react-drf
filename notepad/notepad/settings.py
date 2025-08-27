@@ -34,6 +34,7 @@ ALLOWED_HOSTS = ["*"]
 
 CORS_ALLOWED_ORIGINS = [
     "http://localhost:5173",
+    "https://notes-app-react-drf-1.onrender.com"
 ]
 
 # Application definition
