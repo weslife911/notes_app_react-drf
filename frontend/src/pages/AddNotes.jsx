@@ -1,17 +1,15 @@
 import "./AddNotes.css";
-import { useNoteStore } from "../store/useNoteStore";
-import { useEffect } from "react";
 import { useFormik } from "formik";
 import * as Yup from "yup";
 import { useNavigate } from "react-router-dom";
+import { UseCreateNoteMutation } from "../services/mutations"
+import { UseGetCategoriesQuery } from "../services/queries";
 
 function AddNotes() {
-  const { getCategories, categories, addNote } = useNoteStore();
   const navigate = useNavigate();
 
-  useEffect(() => {
-    getCategories();
-  }, []);
+  const createNoteMutation = UseCreateNoteMutation();
+  const getCategoriesQuery = UseGetCategoriesQuery();
 
   const formik = useFormik({
     initialValues: {
@@ -26,8 +24,11 @@ function AddNotes() {
     }),
     onSubmit: async (values) => {
       try {
-        await addNote(values);
-        navigate("/");
+        await createNoteMutation.mutate(values, {
+          onSuccess: () => {
+            navigate("/");
+          }
+        });
       } catch (error) {
         console.error("Failed to add note:", error);
       }
@@ -88,7 +89,7 @@ function AddNotes() {
           onChange={formik.handleChange}
         />
         <datalist id="categories">
-          {categories.map((category) => (
+          {getCategoriesQuery?.data.map((category) => (
             <option key={category.id} value={category.category} />
           ))}
         </datalist>
@@ -102,6 +103,7 @@ function AddNotes() {
         className="btn btn-primary d-flex justify-content-center"
         style={{ width: "100%" }}
         value="Add Note"
+        disabled={createNoteMutation.isPending}
       />
     </form>
   );

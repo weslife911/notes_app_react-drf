@@ -1,32 +1,23 @@
 import "./AddNotes.css";
 import { useNoteStore } from "../store/useNoteStore";
-import { useEffect } from "react";
 import { useFormik } from "formik";
 import * as Yup from "yup";
 import { useNavigate, useParams } from "react-router-dom";
+import { UseGetCategoriesQuery, UseGetNoteQuery } from "../services/queries";
+import Loader from "../components/Loader";
 
 function EditPage() {
-  const { note, editNote, getNote, getCategories, categories } = useNoteStore();
+  const { editNote } = useNoteStore();
   const { id } = useParams();
   const navigate = useNavigate();
 
-  useEffect(() => {
-    const fetchNote = async () => {
-      return await getNote(id);
-    };
-    fetchNote();
-  }, [id, getNote]);
-
-  useEffect(() => {
-    getCategories();
-  }, []);
-
-  console.log(note)
+  const getNoteQuery = UseGetNoteQuery(id);
+  const getCategoriesQuery = UseGetCategoriesQuery();
 
   const formik = useFormik({
     initialValues: {
-      title: note?.title || "",
-      content: note?.content || "",
+      title: getNoteQuery?.data ? getNoteQuery?.data.title : "",
+      content: getNoteQuery?.data ? getNoteQuery?.data.content : "",
       category: "",
     },
     validationSchema: Yup.object({
@@ -40,7 +31,7 @@ function EditPage() {
           title: values.title,
           content: values.category,
           category: values.category,
-          category_id: note?.category
+          category_id: getNoteQuery?.data.category
         });
         navigate(`/note/${id}`);
       } catch (error) {
@@ -48,6 +39,10 @@ function EditPage() {
       }
     },
   });
+
+  if(getNoteQuery.isPending) return (
+    <Loader/>
+  )
 
   return (
     <form onSubmit={formik.handleSubmit}>
@@ -103,7 +98,7 @@ function EditPage() {
           onChange={formik.handleChange}
         />
         <datalist id="categories">
-          {categories.map((category) => (
+          {getCategoriesQuery?.data.map((category) => (
             <option key={category.id} value={category.category} />
           ))}
         </datalist>

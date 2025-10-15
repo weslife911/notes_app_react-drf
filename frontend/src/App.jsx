@@ -7,8 +7,19 @@ import EditPage from "./pages/EditPage"
 import { Route, Routes } from "react-router-dom"
 import NavBar from "./components/NavBar"
 import { Toaster } from "react-hot-toast"
+import { UseCreateNoteMutation } from "./services/mutations"
+import Loader from "./components/Loader"
+import { UseGetCategoriesQuery, UseGetNotesQuery } from "./services/queries"
 
 function App() {
+
+  const createNoteMutation = UseCreateNoteMutation();
+  const getCategoriesQuery = UseGetCategoriesQuery();
+  const getNotesQuery = UseGetNotesQuery();
+
+  if(createNoteMutation.isPending || getCategoriesQuery.isPending || getNotesQuery.isPending) return (
+    <Loader/>
+  )
 
   return (
     <>

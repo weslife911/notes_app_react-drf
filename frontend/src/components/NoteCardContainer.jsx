@@ -1,15 +1,11 @@
 import { useEffect, useState } from "react";
-import { useNoteStore } from "../store/useNoteStore";
 import NoteCard from "./NoteCard";
-import Loader from "../components/Loader"
+import { UseGetNotesQuery } from "../services/queries";
 
 function NoteCardContainer() {
-  const { getNotes, notes } = useNoteStore();
   const [color, setColor] = useState("green");
 
-  useEffect(() => {
-    getNotes();
-  }, []);
+  const getNotesQuery = UseGetNotesQuery();
 
   useEffect(() => {
     const colors = ["green", "purple", "blue", "orange"];
@@ -27,7 +23,7 @@ function NoteCardContainer() {
   return (
     <div className="container">
       <div className="note-has-grid row">
-        {notes.map((note) => (
+        {getNotesQuery.data.map((note) => (
           <NoteCard key={note.id} color={color} note={note} />
         ))}
       </div>
